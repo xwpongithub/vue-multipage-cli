@@ -1,0 +1,24 @@
+{
+  "name": "webpack-multipage-cli",
+  "version": "1.0.0",
+  "description": "Simple Multiple-page CLI for scaffolding Vue.js projects which is written based on webpack2.2.1.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xwpongithub/webpack-multipage-cli.git"
+  },
+  "keywords": [
+    "webpack",
+    "multipage",
+    "cli",
+    "vue.js"
+  ],
+  "author": "xwpongithub <xwpjava@126.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xwpongithub/webpack-multipage-cli/issues"
+  },
+  "homepage": "https://github.com/xwpongithub/webpack-multipage-cli#readme"
+}
