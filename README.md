@@ -6,8 +6,10 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
   html页面和js入口文件还需要自己手动到build目录下相应的配置文件里去配置一下。
   
 #### 基本构建命令
-  `npm run dev` 开启测试环境，在测试环境下开发
-  `npm run build` 发布正式版本
+  `npm run dev` 开启测试环境，在测试环境下开发  
+  
+  `npm run build` 发布正式版本  
+  
   `npm run lint` 应用eslint检测js，vue文件的语法以及规则
 
 #### 暂时最后
