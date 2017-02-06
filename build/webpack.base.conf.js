@@ -9,7 +9,8 @@ const projectJs = path.resolve(projectSrc,'./js');
 
 module.exports = {
    entry:{
-     index:projectJs+'/index.js'
+     index:projectJs+'/index.js',
+     user:projectJs+'/user.js'
    },
    output:{
      path: config.build.assetsRoot,

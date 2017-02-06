@@ -37,6 +37,12 @@ module.exports = merge(baseWebpackConfig, {
       // 每个html引用的js模块，也可以在这里加上vendor等公用模块
       chunks: ['vendor','manifest','index']
     }),
+    new HtmlWebpackPlugin({
+      filename: 'pages/user.html',
+      template: projectSrc+'/pages/user.html',
+      inject: true,
+      chunks: ['vendor','manifest','user']
+    }),
     new ExtractTextPlugin({
       filename:'style.css'
     }),
