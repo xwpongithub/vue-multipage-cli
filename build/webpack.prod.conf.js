@@ -35,6 +35,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       filename: config.build.index,
       template: projectSrc+'/index.html',
       inject: true,
+      chunks: ['vendor','manifest','index'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -42,6 +43,24 @@ var webpackConfig = merge(baseWebpackConfig, {
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }),
+    // generate dist index.html with correct asset hash for caching.
+    // you can customize output by editing /index.html
+    // see https://github.com/ampedandwired/html-webpack-plugin
+    new HtmlWebpackPlugin({
+      filename: 'pages/user.html',
+      template: projectSrc+'/pages/user.html',
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      chunks: ['vendor','manifest','user'],
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),

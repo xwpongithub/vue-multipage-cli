@@ -1,17 +1,15 @@
 const path = require('path');
+const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = require('../config');
+const entries = require('./entries');
 
 const projectRoot = path.resolve(__dirname, '../');
 const projectSrc = path.resolve(projectRoot,'./src');
 const projectJs = path.resolve(projectSrc,'./js');
 
-module.exports = {
-   entry:{
-     index:projectJs+'/index.js',
-     user:projectJs+'/user.js'
-   },
+module.exports = merge(entries,{
    output:{
      path: config.build.assetsRoot,
      publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
@@ -115,4 +113,4 @@ module.exports = {
        }
      ]
    }
-};
+});
