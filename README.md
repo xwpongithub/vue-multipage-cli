@@ -12,12 +12,14 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
   
   `npm run lint` 应用eslint检测js，vue文件的语法以及规则
 
-#### 添加入口文件的方式
+#### 添加入口文件的方式  
+
   在build目录下的entries.js文件中添加，如：`passport:projectJs+'/passport.js'`,
 之后在src的js目录下添加对应的js即可，之后需要在webpack.dev.conf.js和webpack.prod.conf
 中配置其对应的html文件，添加html文件的方式如：  
 
-dev模式下：
+dev模式下：  
+
      ```javascript
      new HtmlWebpackPlugin({
            filename: 'pages/user.html',
@@ -27,7 +29,8 @@ dev模式下：
      });
      ```  
      
-prod模式下:
+prod模式下:  
+
      ```javascript
      new HtmlWebpackPlugin({
            filename: 'pages/user.html',
