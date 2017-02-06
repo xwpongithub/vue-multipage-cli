@@ -18,15 +18,15 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
 中配置其对应的html文件，添加html文件的方式如：  
 
 dev模式下：
-     `new HtmlWebpackPlugin({
+     ```new HtmlWebpackPlugin({
            filename: 'pages/user.html',
            template: projectSrc+'/pages/user.html',
            inject: true,
            chunks: ['vendor','manifest','user']=>user为对应entries.js文件中的key值
-     })`  
+     })```  
      
 prod模式下:
-     `new HtmlWebpackPlugin({
+     ```new HtmlWebpackPlugin({
            filename: 'pages/user.html',
            template: projectSrc+'/pages/user.html',
            inject: true,
@@ -37,7 +37,7 @@ prod模式下:
            },
            chunks: ['vendor','manifest','user'],
            chunksSortMode: 'dependency'
-     })`  
+     })```
      
 具体配置请参看对应文件下已有的html配置项。  
 后期打算把html文件这里的配置更为灵活，而不用像现在这样手动配置这么多东西。
