@@ -13,38 +13,9 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
   `npm run lint` 应用eslint检测js，vue文件的语法以及规则
 
 #### 添加入口文件的方式  
-
-  在build目录下的entries.js文件中添加，如：`passport:projectJs+'/passport.js'`,
-之后在src的js目录下添加对应的js即可，之后需要在webpack.dev.conf.js和webpack.prod.conf
-中配置其对应的html文件，添加html文件的方式如：  
-
-dev模式下：  
-
-```
-     new HtmlWebpackPlugin({
-           filename: 'pages/user.html',
-           template: projectSrc+'/pages/user.html',
-           inject: true,
-           chunks: ['vendor','manifest','user']=>user为对应entries.js文件中的key值
-     });
-```
-     
-prod模式下:  
-
-```
-     new HtmlWebpackPlugin({
-           filename: 'pages/user.html',
-           template: projectSrc+'/pages/user.html',
-           inject: true,
-           minify: {
-             removeComments: true,
-             collapseWhitespace: true,
-             removeAttributeQuotes: true
-           },
-           chunks: ['vendor','manifest','user'],
-           chunksSortMode: 'dependency'
-     });
-```
-     
-具体配置请参看对应文件下已有的html配置项。  
-后期打算把html文件这里的配置更为灵活，而不用像现在这样手动配置这么多东西。
+   入口js文件必须添加到src目录下的js文件夹中，之后再将其对应的html文件添加到
+   src目录下的pages目录中（目前不支持嵌套多级目录，而且个人也不建议再在pages
+   目录下有多级目录，而且html文件的名字必须与对应的js入口文件js的名称相同）。  
+   
+   所以，只要按照以上方式新建文件，就可以做到不进行任何配置，只要添加对应文件
+   就行了，之后运行想要运行的构建命令即可~  
