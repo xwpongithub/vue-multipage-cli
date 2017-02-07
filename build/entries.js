@@ -1,7 +1,6 @@
 const path = require('path');
 const glob = require('glob');
 
-const projectSrc = path.resolve(__dirname,'../src');
 const projectJs = path.resolve(__dirname,'../src/js');
 const globalPath = projectJs+'/**/*.js';
 
