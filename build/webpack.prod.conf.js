@@ -1,4 +1,5 @@
 const path = require('path');
+const glob = require('glob');
 const config = require('../config');
 const utils = require('./utils');
 const webpack = require('webpack');
@@ -10,7 +11,7 @@ const env = config.build.env;
 const baseWebpackConfig = require('./webpack.base.conf');
 const projectSrc = path.resolve(__dirname,'../src');
 
-var webpackConfig = merge(baseWebpackConfig, {
+let webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
@@ -25,45 +26,10 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
-      }
+      },
+      sourceMap:config.build.productionSourceMap
     }),
     new ExtractTextPlugin(utils.assetsPath('css/style.[contenthash].css')),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: projectSrc+'/index.html',
-      inject: true,
-      chunks: ['vendor','manifest','index'],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: 'pages/user.html',
-      template: projectSrc+'/pages/user.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      chunks: ['vendor','manifest','user'],
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
-    }),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest'],
@@ -102,6 +68,47 @@ if (config.build.productionGzip) {
       minRatio: 0.8
     })
   )
+}
+
+let pages = ((globalPath)=>{
+  let htmlFiles = {},
+    pageName;
+
+  glob.sync(globalPath).forEach((pagePath)=>{
+    var tmp='';
+    var basename = path.basename(pagePath, path.extname(pagePath));
+    if(pagePath.indexOf('pages')>-1){
+      tmp = pagePath.split('/').slice(-2,-1).join('')+'/'+basename;
+    }else{
+      tmp = 'index';
+    }
+    pageName = tmp;
+    htmlFiles[pageName] = {};
+    htmlFiles[pageName]['chunk'] = basename;
+    htmlFiles[pageName]['path'] = pagePath;
+  });
+  return htmlFiles;
+})(projectSrc+'/**/*.html');
+
+for (let pagePath in pages) {
+  let conf = {
+    filename: pagePath + '.html',
+    template: pages[pagePath]['path'],
+    inject: true,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true
+      // more options:
+      // https://github.com/kangax/html-minifier#options-quick-reference
+    },
+    chunks: [pages[pagePath]['chunk'],'vendor','manifest'],
+    // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+    chunksSortMode: 'dependency'
+  };
+  // https://github.com/ampedandwired/html-webpack-plugin
+  /*入口文件对应html文件（配置多个，一个页面对应一个入口，通过chunks对应）*/
+  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
 }
 
 module.exports =  webpackConfig;

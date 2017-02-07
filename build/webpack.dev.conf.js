@@ -1,4 +1,5 @@
 const path = require('path');
+const glob = require('glob');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -13,7 +14,7 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name]);
 });
 
-module.exports = merge(baseWebpackConfig, {
+let devConfig =  merge(baseWebpackConfig, {
   devtool: '#eval-source-map',
   plugins: [
     new webpack.DefinePlugin({
@@ -25,27 +26,48 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
     }),
-    // https://github.com/ampedandwired/html-webpack-plugin
-    /*入口文件对应html文件（配置多个，一个页面对应一个入口，通过chunks对应）*/
-    new HtmlWebpackPlugin({
-      // 生成出来的html文件名
-      filename: 'index.html',
-      // 每个html的模版，这里多个页面使用同一个模版
-      template: projectSrc+'/index.html',
-      // 自动将引用插入html
-      inject: true,
-      // 每个html引用的js模块，也可以在这里加上vendor等公用模块
-      chunks: ['vendor','manifest','index']
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'pages/user.html',
-      template: projectSrc+'/pages/user.html',
-      inject: true,
-      chunks: ['vendor','manifest','user']
-    }),
     new ExtractTextPlugin({
       filename:'style.css'
     }),
     new FriendlyErrors()
   ]
 });
+
+let pages = ((globalPath)=>{
+  let htmlFiles = {},
+    pageName;
+
+  glob.sync(globalPath).forEach((pagePath)=>{
+    var tmp='';
+    var basename = path.basename(pagePath, path.extname(pagePath));
+    if(pagePath.indexOf('pages')>-1){
+      tmp = pagePath.split('/').slice(-2,-1).join('')+'/'+basename;
+    }else{
+      tmp = 'index';
+    }
+    pageName = tmp;
+    htmlFiles[pageName] = {};
+    htmlFiles[pageName]['chunk'] = basename;
+    htmlFiles[pageName]['path'] = pagePath;
+  });
+  return htmlFiles;
+})(projectSrc+'/**/*.html');
+
+for (let pagePath in pages) {
+  let conf = {
+    // 生成出来的html文件名
+    filename: pagePath + '.html',
+    // 每个html的模版，这里多个页面使用同一个模版
+    template: pages[pagePath]['path'],
+    // 自动将引用插入html
+    inject: true,
+    // 每个html引用的js模块，也可以在这里加上vendor等公用模块
+    chunks: ['vendor','manifest',pages[pagePath]['chunk']]
+  };
+  // https://github.com/ampedandwired/html-webpack-plugin
+  /*入口文件对应html文件（配置多个，一个页面对应一个入口，通过chunks对应）*/
+  devConfig.plugins.push(new HtmlWebpackPlugin(conf));
+}
+
+module.exports = devConfig;
+

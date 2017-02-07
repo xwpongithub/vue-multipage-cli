@@ -1,13 +1,22 @@
 const path = require('path');
+const glob = require('glob');
 
+const projectSrc = path.resolve(__dirname,'../src');
 const projectJs = path.resolve(__dirname,'../src/js');
+const globalPath = projectJs+'/**/*.js';
 
-/*
- *  js入口配置
- * */
-module.exports = {
-    entry:{
-      index:projectJs+'/index.js',
-      user:projectJs+'/user.js'
-    }
-};
+let entries = ((globalPath)=>{
+
+  let entries = {},
+    entryName;
+
+  glob.sync(globalPath).forEach((entryPath)=>{
+    entryName = path.basename(entryPath, path.extname(entryPath));
+    entries[entryName] = entryPath;
+  });
+
+  return {entry:entries};
+
+})(globalPath);
+
+module.exports = entries;
