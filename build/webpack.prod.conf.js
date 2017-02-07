@@ -106,8 +106,6 @@ for (let pagePath in pages) {
     // necessary to consistently work with multiple chunks via CommonsChunkPlugin
     chunksSortMode: 'dependency'
   };
-  // https://github.com/ampedandwired/html-webpack-plugin
-  /*入口文件对应html文件（配置多个，一个页面对应一个入口，通过chunks对应）*/
   webpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
 }
 
