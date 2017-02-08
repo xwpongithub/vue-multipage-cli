@@ -29,7 +29,7 @@ let webpackConfig = merge(baseWebpackConfig, {
       },
       sourceMap:config.build.productionSourceMap
     }),
-    new ExtractTextPlugin(utils.assetsPath('css/style.[contenthash].css')),
+    new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest'],
