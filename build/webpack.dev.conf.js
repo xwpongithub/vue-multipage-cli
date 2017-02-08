@@ -22,12 +22,12 @@ let devConfig =  merge(baseWebpackConfig, {
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
     }),
     new ExtractTextPlugin({
-      filename:'style.css'
+      filename:'[name].css'
     }),
     new FriendlyErrors()
   ]
