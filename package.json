@@ -1,6 +1,6 @@
 {
   "name": "vue-multipage-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple Multiple-page CLI for scaffolding Vue.js projects which is written based on webpack2.2.1.",
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -73,5 +73,8 @@
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
+  },
+  "dependencies": {
+    "vue": "^2.1.10"
   }
 }

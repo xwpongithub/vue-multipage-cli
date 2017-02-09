@@ -9,7 +9,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const env = config.build.env;
 const baseWebpackConfig = require('./webpack.base.conf');
+
 const projectSrc = path.resolve(__dirname,'../src');
+const projectJs = path.resolve(__dirname,'../src/js');
+const globalPath = projectJs+'/**/*.js';
 
 let webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
@@ -30,28 +33,48 @@ let webpackConfig = merge(baseWebpackConfig, {
       sourceMap:config.build.productionSourceMap
     }),
     new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
-    // split vendor js into its own file
+    /*
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'manifest'],
-      minChunks: function (module, count) {
-        // any required modules inside node_modules are extracted to vendor
-        return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
-          ) === 0
-        )
-      }
+       names: ['vendor','manifest'],
+       minChunks: function (module, count) {
+         // any required modules inside node_modules are extracted to vendor
+         return (
+           module.resource &&
+           /\.js$/.test(module.resource) &&
+           module.resource.indexOf(
+             path.join(__dirname, '../node_modules')
+           ) === 0
+         )
+       }
     }),
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      chunks: ['vendor']
-    })
+    */
   ]
 });
+
+let entries = ((globalPath)=>{
+
+  let entryNames = [],
+    entryName;
+
+  glob.sync(globalPath).forEach((entryPath)=>{
+    entryName = path.basename(entryPath, path.extname(entryPath));
+    entryNames.push(entryName);
+  });
+
+  return entryNames;
+
+})(globalPath);
+
+webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+  names: ['vendors','manifest'],
+  chunks: entries, //提取哪些模块共有的部分
+  minChunks: entries.length
+}));
+
+webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+ name: 'manifest',
+ chunks: ['vendor']
+}));
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')
@@ -75,8 +98,8 @@ let pages = ((globalPath)=>{
     pageName;
 
   glob.sync(globalPath).forEach((pagePath)=>{
-    var tmp='';
-    var basename = path.basename(pagePath, path.extname(pagePath));
+    let tmp='';
+    let basename = path.basename(pagePath, path.extname(pagePath));
     if(pagePath.indexOf('pages')>-1){
       tmp = pagePath.split('/').slice(-2,-1).join('')+'/'+basename;
     }else{

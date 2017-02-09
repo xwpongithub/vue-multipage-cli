@@ -1,3 +1,12 @@
+import Vue from 'vue';
 import 'styl/user';
 
-console.log('I am user');
+/* eslint-disable no-new */
+new Vue({
+  el: '.app',
+  data() {
+    return {
+      message: 'Hello user center!'
+    };
+  }
+});

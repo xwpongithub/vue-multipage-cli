@@ -15,13 +15,15 @@ console.log(
   '  Opening index.html over file:// won\'t work.\n'
 );
 
-var spinner = ora('building for production...');
+let spinner = ora('building for production...');
 spinner.start();
 
-var assetsPath = path.join(config.build.assetsRoot, config.build.assetsSubDirectory);
+let staticPath = path.resolve(__dirname,'../static');
+
+let assetsPath = path.join(config.build.assetsRoot, config.build.assetsSubDirectory);
 rm('-rf', assetsPath);
 mkdir('-p', assetsPath);
-cp('-R', 'static/*', assetsPath);
+cp('-R', staticPath, assetsPath);
 
 webpack(webpackConfig, function (err, stats) {
   spinner.stop()

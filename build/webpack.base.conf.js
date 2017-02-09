@@ -60,11 +60,11 @@ let baseConfig = merge(entries,{
              loaders: {
                css: ExtractTextPlugin.extract({
                  loader: 'css-loader',
-                 fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
+                 fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
                }),
                stylus:ExtractTextPlugin.extract({
                  loader: 'css-loader!postcss-loader!stylus-loader',
-                 fallbackLoader: 'vue-style-loader',
+                 fallback: 'vue-style-loader',
                })
              }
            }
