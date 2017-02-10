@@ -17,5 +17,8 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
    src目录下的pages目录中（目前不支持嵌套多级目录，而且个人也不建议再在pages
    目录下有多级目录，而且html文件的名字必须与对应的js入口文件js的名称相同）。  
    
+   每一个入口js文件对应着modules目录下的一个目录，如已经用的index.js对应
+   modules目录下的Index.vue。
+      
    所以，只要按照以上方式新建文件，就可以做到不进行任何配置，只要添加对应文件
    就行了，之后运行想要运行的构建命令即可~  

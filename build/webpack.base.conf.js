@@ -18,6 +18,7 @@ let baseConfig = merge(entries,{
    resolve: {
      alias: {
        'common': path.resolve(projectSrc, 'common'),
+       'modules':  path.resolve(projectSrc, 'modules'),
        'components': path.resolve(projectSrc, 'components'),
        'styl': path.resolve(projectSrc, 'styl'),
        'vue$': 'vue/dist/vue.common.js'
