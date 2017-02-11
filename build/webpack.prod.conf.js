@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const env = config.build.env;
 const baseWebpackConfig = require('./webpack.base.conf');
@@ -15,6 +16,9 @@ const projectJs = path.resolve(__dirname,'../src/js');
 const globalPath = projectJs+'/**/*.js';
 
 let webpackConfig = merge(baseWebpackConfig, {
+  module: {
+    rules: utils.prodStyleLoaders({ sourceMap: config.build.productionSourceMap })
+  },
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
@@ -27,12 +31,16 @@ let webpackConfig = merge(baseWebpackConfig, {
       'process.env': env
     }),
     new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
       sourceMap:config.build.productionSourceMap
     }),
-    new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].css')),
+    new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].min.css')),
+    /*
+    new OptimizeCssAssetsPlugin({
+      cssProcessor: require('cssnano'),
+      cssProcessorOptions: { discardComments: {removeAll: true } },
+      canPrint: true
+    })
+    */
     /*
     new webpack.optimize.CommonsChunkPlugin({
        names: ['vendor','manifest'],
@@ -77,7 +85,7 @@ webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
 }));
 
 if (config.build.productionGzip) {
-  const CompressionWebpackPlugin = require('compression-webpack-plugin')
+  const CompressionWebpackPlugin = require('compression-webpack-plugin');
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',

@@ -3,10 +3,10 @@ const glob = require('glob');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FriendlyErrors = require('friendly-errors-webpack-plugin');
 
 const config = require('../config');
+const utils = require('./utils');
 const baseWebpackConfig = require('./webpack.base.conf');
 const projectSrc = path.resolve(__dirname,'../src');
 
@@ -15,6 +15,9 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 });
 
 let devConfig =  merge(baseWebpackConfig, {
+  module: {
+    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
+  },
   devtool: '#eval-source-map',
   plugins: [
     new webpack.DefinePlugin({
@@ -25,9 +28,6 @@ let devConfig =  merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest']
-    }),
-    new ExtractTextPlugin({
-      filename:'[name].css'
     }),
     new FriendlyErrors()
   ]

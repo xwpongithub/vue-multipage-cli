@@ -3,10 +3,22 @@ const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = require('../config');
+const utils = require('./utils');
 const entries = require('./entries');
 
 const projectRoot = path.resolve(__dirname, '../');
 const projectSrc = path.resolve(projectRoot,'./src');
+
+let env = process.env.NODE_ENV;
+// check env & config/index.js to decide whether to enable CSS source maps for the
+// various preprocessor loaders added to vue-loader at the end of this file
+
+let developEnv = env === 'development';
+let prodEnv = env === 'production';
+
+let cssSourceMapDev = (developEnv && config.dev.cssSourceMap);
+let cssSourceMapProd = ( prodEnv&& config.build.productionSourceMap);
+let useCssSourceMap = cssSourceMapDev || cssSourceMapProd;
 
 let baseConfig = merge(entries,{
    output:{
@@ -55,21 +67,15 @@ let baseConfig = merge(entries,{
          test: /\.vue$/,
          include:[projectSrc],
          exclude: /node_modules/,
-         use: [{
-           loader:'vue-loader',
-           options: {
-             loaders: {
-               css: ExtractTextPlugin.extract({
-                 loader: 'css-loader',
-                 fallback: 'vue-style-loader' // <- this is a dep of vue-loader, so no need to explicitly install if using npm3
-               }),
-               stylus:ExtractTextPlugin.extract({
-                 loader: 'css-loader!postcss-loader!stylus-loader',
-                 fallback: 'vue-style-loader',
-               })
-             }
-           }
-         }]
+         loader:'vue-loader',
+         options: {
+           postcss: [require('autoprefixer')({
+             browsers: ['last 2 versions']
+           })],
+           loaders: prodEnv?utils.prodCssLoaders({
+               sourceMap: config.build.productionSourceMap,
+             }):utils.cssLoaders({ sourceMap: useCssSourceMap })
+         }
        },
        {
          test: /\.js$/,
@@ -88,15 +94,11 @@ let baseConfig = merge(entries,{
          }]
        },
        {
-         test: /\.styl$/,
-         use: ExtractTextPlugin.extract(['css-loader','postcss-loader','stylus-loader'])
-       },
-       {
          test: /favicon\.png$/,
          use: [{
            loader: 'file-loader',
            options: {
-             name: '[name].[ext]?[hash]'
+             name: utils.assetsPath('[name].[ext]?[hash]')
            }
          }]
        },
@@ -107,7 +109,7 @@ let baseConfig = merge(entries,{
            loader: 'url-loader',
            options: {
              limit: 10000,
-             name:'img/[name].[hash:7].[ext]'
+             name:utils.assetsPath('img/[name].[hash:7].[ext]')
            }
          }]
        }
