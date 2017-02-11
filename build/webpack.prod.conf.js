@@ -6,7 +6,6 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-//const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const env = config.build.env;
 const baseWebpackConfig = require('./webpack.base.conf');
@@ -35,13 +34,6 @@ let webpackConfig = merge(baseWebpackConfig, {
     }),
     new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].min.css')),
     /*
-    new OptimizeCssAssetsPlugin({
-      cssProcessor: require('cssnano'),
-      cssProcessorOptions: { discardComments: {removeAll: true } },
-      canPrint: true
-    })
-    */
-    /*
     new webpack.optimize.CommonsChunkPlugin({
        names: ['vendor','manifest'],
        minChunks: function (module, count) {
@@ -55,7 +47,11 @@ let webpackConfig = merge(baseWebpackConfig, {
          )
        }
     }),
-    */
+     new webpack.optimize.CommonsChunkPlugin({
+     name: 'manifest',
+     chunks: ['vendor']
+     })
+     */
   ]
 });
 
@@ -74,14 +70,14 @@ let entries = ((globalPath)=>{
 })(globalPath);
 
 webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-  names: ['vendors','manifest'],
+  names:'vendor',
   chunks: entries, //提取哪些模块共有的部分
   minChunks: entries.length
 }));
 
 webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
- name: 'manifest',
- chunks: ['vendor']
+  name: 'manifest',
+  chunks: ['vendor']
 }));
 
 if (config.build.productionGzip) {
