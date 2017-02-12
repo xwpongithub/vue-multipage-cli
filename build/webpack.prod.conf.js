@@ -70,7 +70,7 @@ let entries = ((globalPath)=>{
 })(globalPath);
 
 webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-  names:'vendor',
+  name:'vendor',
   chunks: entries, //提取哪些模块共有的部分
   minChunks: entries.length
 }));
