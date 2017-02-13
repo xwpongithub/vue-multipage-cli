@@ -6,7 +6,10 @@
     <a href="pages/user.html">用户中心a </a>
   </div>
 </template>
-<style lang='stylus' rel='stylesheet/stylus'></style>
+<style lang='stylus' rel='stylesheet/stylus'>
+  .app
+    display:flex
+</style>
 <script type='text/ecmascript-6'>
   export default {
     data() {

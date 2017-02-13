@@ -1,6 +1,5 @@
 const path = require('path');
 const merge = require('webpack-merge');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = require('../config');
 const utils = require('./utils');
@@ -40,19 +39,7 @@ let baseConfig = merge(entries,{
    module: {
      rules: [
        {
-         test: /\.js$/,
-         include:[projectSrc],
-         exclude: /node_modules/,
-         enforce: 'pre',
-         use: [{
-           loader: 'eslint-loader',
-           options:{
-             formatter:require('eslint-friendly-formatter')
-           }
-         }],
-       },
-       {
-         test: /\.vue$/,
+         test: /\.(js|vue)$/,
          include:[projectSrc],
          exclude: /node_modules/,
          enforce: 'pre',

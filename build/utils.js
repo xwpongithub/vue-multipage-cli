@@ -15,20 +15,17 @@ exports.cssLoaders = function (options) {
   // generate loader string to be used with extract text plugin
   function generateLoaders (loaders) {
     let sourceLoader = loaders.map(function (loader) {
-      loader = loader + '-loader';
-      return loader;
+      let extraParamChar;
+      if (/\?/.test(loader)) {
+        loader = loader.replace(/\?/, '-loader?');
+        extraParamChar = '&';
+      } else {
+        loader = loader + '-loader';
+        extraParamChar = '?';
+      }
+      return loader + (options.sourceMap ? extraParamChar + 'sourceMap' : '')
     }).join('!');
-
-    // Extract CSS when that option is specified
-    // (which is the case during production build)
-    if (options.extract) {
-      return ExtractTextPlugin.extract({
-        use:sourceLoader,
-        fallback:'vue-style-loader'
-      });
-    } else {
-      return ['vue-style-loader', sourceLoader].join('!')
-    }
+    return ['vue-style-loader', sourceLoader].join('!')
   }
 
   // http://vuejs.github.io/vue-loader/en/configurations/extract-css.html
@@ -48,7 +45,12 @@ exports.prodCssLoaders = function(options){
   // generate loader string to be used with extract text plugin
   function generateLoaders (loaders) {
     let sourceLoader = loaders.map(function (loader) {
-      loader = loader + '-loader';
+      if(loader.indexOf('?')>-1){
+        let tmp = loader.split('?');
+        loader = tmp[0]+'-loader?'+tmp[1];
+      }else{
+        loader = loader + '-loader';
+      }
       return loader;
     });
 
@@ -75,6 +77,8 @@ exports.prodCssLoaders = function(options){
     stylus: generateLoaders(['css', 'stylus']),
     styl: generateLoaders(['css', 'stylus'])
   }
+
+  console.log(loaders);
   return loaders;
 };
 
