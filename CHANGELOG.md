@@ -1,5 +1,10 @@
 # Changelog
 
+## 2017-02-14 V1.1.2  
+
+1.优化了webpack的配置项
+2.增加了构建分析模块webpack-bundle-analyzer分析构建情况
+
 ## 2017-02-13 V1.1.0
 
 1. 修复了dev模式下配置sourceMap需要生成时不生成的问题

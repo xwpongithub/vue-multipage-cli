@@ -19,6 +19,10 @@ let cssSourceMapDev = (developEnv && config.dev.cssSourceMap);
 let cssSourceMapProd = ( prodEnv&& config.build.productionSourceMap);
 let useCssSourceMap = cssSourceMapDev || cssSourceMapProd;
 
+function resolve (dir) {
+  return path.join(__dirname, '..', dir);
+}
+
 let baseConfig = merge(entries,{
    output:{
      path: config.build.assetsRoot,
@@ -34,15 +38,19 @@ let baseConfig = merge(entries,{
        'styl': path.resolve(projectSrc, 'styl'),
        'vue$': 'vue/dist/vue.common.js'
      },
+     //Tell webpack what directories should be searched when resolving modules.
+     modules: [
+       resolve('src'),
+       resolve('node_modules')
+     ],
      extensions:['.js','.vue','.json','.styl']
    },
    module: {
      rules: [
        {
          test: /\.(js|vue)$/,
-         include:[projectSrc],
-         exclude: /node_modules/,
          enforce: 'pre',
+         include: [resolve('src'), resolve('test')],
          use: [{
            loader: 'eslint-loader',
            options:{
@@ -67,38 +75,23 @@ let baseConfig = merge(entries,{
        {
          test: /\.js$/,
          use: ['babel-loader'],
-         include:[projectSrc],
-         exclude: /node_modules/
+         include:[resolve('src')],
        },
        {
-         test: /\.html$/,
-         use: [{
-           loader: 'html-loader',
-           options: {
-             root: projectSrc,
-             attrs: ['img:src', 'link:href']
-           }
-         }]
+         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+         loader: 'url-loader',
+         query: {
+           limit: 10000,
+           name: utils.assetsPath('img/[name].[hash:7].[ext]')
+         }
        },
        {
-         test: /favicon\.png$/,
-         use: [{
-           loader: 'file-loader',
-           options: {
-             name: utils.assetsPath('[name].[ext]?[hash]')
-           }
-         }]
-       },
-       {
-         test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
-         exclude: /favicon\.png$/,
-         use: [{
-           loader: 'url-loader',
-           options: {
-             limit: 10000,
-             name:utils.assetsPath('img/[name].[hash:7].[ext]')
-           }
-         }]
+         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+         loader: 'url-loader',
+         query: {
+           limit: 10000,
+           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+         }
        }
      ]
    }

@@ -77,8 +77,6 @@ exports.prodCssLoaders = function(options){
     stylus: generateLoaders(['css', 'stylus']),
     styl: generateLoaders(['css', 'stylus'])
   }
-
-  console.log(loaders);
   return loaders;
 };
 

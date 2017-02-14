@@ -136,4 +136,10 @@ for (let pagePath in pages) {
   webpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
 }
 
+if (config.build.bundleAnalyzerReport) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+}
+
+
 module.exports =  webpackConfig;

@@ -10,6 +10,8 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
   
   `npm run build` 发布正式版本  
   
+  `npm run build --report` 发布正式版本的同时输出构建情况
+  
   `npm run lint` 应用eslint检测js，vue文件的语法以及规则
 
 #### 添加入口文件的方式  
