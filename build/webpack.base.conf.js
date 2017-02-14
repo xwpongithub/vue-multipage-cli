@@ -50,7 +50,7 @@ let baseConfig = merge(entries,{
        {
          test: /\.(js|vue)$/,
          enforce: 'pre',
-         include: [resolve('src'), resolve('test')],
+         include: [resolve('src')],
          use: [{
            loader: 'eslint-loader',
            options:{
@@ -60,16 +60,18 @@ let baseConfig = merge(entries,{
        },
        {
          test: /\.vue$/,
-         include:[projectSrc],
-         exclude: /node_modules/,
+         include:[resolve('src')],
          loader:'vue-loader',
          options: {
            postcss: [require('autoprefixer')({
              browsers: ['last 2 versions']
            })],
-           loaders: prodEnv?utils.prodCssLoaders({
-               sourceMap: config.build.productionSourceMap,
-             }):utils.cssLoaders({ sourceMap: useCssSourceMap })
+           loaders: utils.cssLoaders({
+             sourceMap: prodEnv
+               ? config.build.productionSourceMap
+               : config.dev.cssSourceMap,
+             extract: prodEnv
+           })
          }
        },
        {

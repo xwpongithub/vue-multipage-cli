@@ -16,7 +16,10 @@ const globalPath = projectJs+'/**/*.js';
 
 let webpackConfig = merge(baseWebpackConfig, {
   module: {
-    rules: utils.prodStyleLoaders({ sourceMap: config.build.productionSourceMap })
+    rules: utils.styleLoaders({
+      sourceMap: config.build.productionSourceMap,
+      extract: true
+    })
   },
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
@@ -30,6 +33,9 @@ let webpackConfig = merge(baseWebpackConfig, {
       'process.env': env
     }),
     new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
       sourceMap:config.build.productionSourceMap
     }),
     new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].min.css')),
