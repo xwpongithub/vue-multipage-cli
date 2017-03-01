@@ -3,7 +3,6 @@
 ## 2017-02-14 V1.2.0
 
 1.精简了utils.js里生成loader的代码以及对less及sass等其他预处理语言的支持不友好问题
-2.现在若想在生产环境下将css压缩，必须将config目录下的index.js中的productionSourceMap改为true
 
 ## 2017-02-14 V1.1.2  
 
