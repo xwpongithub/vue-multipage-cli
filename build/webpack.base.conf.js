@@ -32,17 +32,12 @@ let baseConfig = merge(entries,{
    },
    resolve: {
      alias: {
+       'vue$': 'vue/dist/vue.esm.js',
        'common': path.resolve(projectSrc, 'common'),
        'modules':  path.resolve(projectSrc, 'modules'),
        'components': path.resolve(projectSrc, 'components'),
        'styl': path.resolve(projectSrc, 'styl'),
-       'vue$': 'vue/dist/vue.common.js'
      },
-     //Tell webpack what directories should be searched when resolving modules.
-     modules: [
-       resolve('src'),
-       resolve('node_modules')
-     ],
      extensions:['.js','.vue','.json','.styl']
    },
    module: {
