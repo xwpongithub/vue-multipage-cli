@@ -84,8 +84,6 @@ exports.styleLoaders=function(options){
     }else{
       loader.splice(loader.length,0,postCssLoader);
     }
-    console.log('====');
-    console.log(JSON.stringify(loader));
 
     output.push({
       test: new RegExp('\\.' + extension + '$'),
