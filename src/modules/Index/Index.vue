@@ -3,7 +3,7 @@
     {{message}}
     <br>
     <a href="#">首页</a>
-    <a href="pages/user.html">用户中心a </a>
+    <a href="pages/user.html">用户中心</a>
   </div>
 </template>
 <style lang='stylus' rel='stylesheet/stylus'>

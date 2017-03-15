@@ -6,6 +6,8 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 const env = config.build.env;
 const baseWebpackConfig = require('./webpack.base.conf');
@@ -39,6 +41,9 @@ let webpackConfig = merge(baseWebpackConfig, {
       sourceMap:config.build.productionSourceMap
     }),
     new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].min.css')),
+    // Compress extracted CSS. We are using this plugin so that possible
+    // duplicated CSS from different components can be deduped.
+    new OptimizeCSSPlugin(),
     /*
     new webpack.optimize.CommonsChunkPlugin({
        names: ['vendor','manifest'],
@@ -85,6 +90,15 @@ webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
   name: 'manifest',
   chunks: ['vendor']
 }));
+
+webpackConfig.plugins.push(new CopyWebpackPlugin([
+  {
+    from: path.resolve(__dirname, '../static'),
+    to: config.build.assetsSubDirectory,
+    ignore: ['.*']
+  }
+]));
+
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin');

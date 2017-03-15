@@ -79,10 +79,18 @@ exports.styleLoaders=function(options){
       }
     };
 
-    if(loader.length>2){
-      loader.splice(loader.length-1,0,postCssLoader);
-    }else{
-      loader.splice(loader.length,0,postCssLoader);
+    if(options.extract) {
+      if (loader.length > 3) {
+        loader.splice(loader.length - 1, 0, postCssLoader);
+      } else {
+        loader.splice(loader.length, 0, postCssLoader);
+      }
+    } else {
+      if (loader.length > 2) {
+        loader.splice(loader.length - 1, 0, postCssLoader);
+      } else {
+        loader.splice(loader.length, 0, postCssLoader);
+      }
     }
 
     output.push({

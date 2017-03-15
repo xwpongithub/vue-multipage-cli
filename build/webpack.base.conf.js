@@ -33,6 +33,7 @@ let baseConfig = merge(entries,{
    resolve: {
      alias: {
        'vue$': 'vue/dist/vue.esm.js',
+       '@': resolve('src'),
        'common': path.resolve(projectSrc, 'common'),
        'modules':  path.resolve(projectSrc, 'modules'),
        'components': path.resolve(projectSrc, 'components'),
