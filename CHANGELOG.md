@@ -1,6 +1,11 @@
 # Changelog
 
-## 2017-02-14 V1.2.1
+## 2017-03-15 V1.2.2
+1.修复了一个在build过程中找不到直接import进来的css的问题
+2.加入了optimize-css-assets-webpack-plugin模块和copy-webpack-plugin模块
+3.优化了过时的配置项
+
+## 2017-03-14 V1.2.1
 1.修复了一个引入.css文件会报错的bug
 
 ## 2017-02-14 V1.2.0
