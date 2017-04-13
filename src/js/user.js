@@ -3,7 +3,7 @@ import 'styl/user';
 
 /* eslint-disable no-new */
 new Vue({
-  el: '.app',
+  el: '#app',
   data() {
     return {
       message: 'Hello user center!'
