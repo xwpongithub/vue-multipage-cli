@@ -6,6 +6,8 @@ Simple Multiple-page CLI for scaffolding Vue.js projects which is written based 
   html页面和js入口文件还需要自己手动到build目录下相应的配置文件里去配置一下。
   
 #### 基本构建命令
+  `npm update` 更新依赖的模块
+
   `npm install` 安装依赖模块（其他命令必须在运行完此命令后才能调用！）
 
   `npm run dev` 开启测试环境，在测试环境下开发  
