@@ -1,8 +1,9 @@
-const path = require('path');
+// see http://vuejs-templates.github.io/webpack for documentation.
+var path = require('path')
 
 module.exports = {
   build: {
-    env: require('./prod.dev'),
+    env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
@@ -23,6 +24,7 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     port: 8080,
+    autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
@@ -31,6 +33,6 @@ module.exports = {
     // (https://github.com/webpack/css-loader#sourcemaps)
     // In our experience, they generally work as expected,
     // just be aware of this issue when enabling this option.
-    cssSourceMap: true
+    cssSourceMap: false
   }
-};
+}

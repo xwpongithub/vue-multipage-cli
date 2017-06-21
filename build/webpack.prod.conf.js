@@ -1,22 +1,18 @@
-const path = require('path');
-const glob = require('glob');
-const config = require('../config');
-const utils = require('./utils');
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+var path = require('path')
+var utils = require('./utils')
+var webpack = require('webpack')
+var config = require('../config')
+var merge = require('webpack-merge')
+var baseWebpackConfig = require('./webpack.base.conf')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var glob = require('glob');
 
-const env = config.build.env;
-const baseWebpackConfig = require('./webpack.base.conf');
+var env = config.build.env
 
-const projectSrc = path.resolve(__dirname,'../src');
-const projectJs = path.resolve(__dirname,'../src/js');
-const globalPath = projectJs+'/**/*.js';
-
-let webpackConfig = merge(baseWebpackConfig, {
+var webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -38,70 +34,53 @@ let webpackConfig = merge(baseWebpackConfig, {
       compress: {
         warnings: false
       },
-      sourceMap:config.build.productionSourceMap
+      sourceMap: true
     }),
-    new ExtractTextPlugin(utils.assetsPath('css/[name].[contenthash].min.css')),
+    // extract css into its own file
+    new ExtractTextPlugin({
+      filename: utils.assetsPath('css/[name].[contenthash].css')
+    }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
-    new OptimizeCSSPlugin(),
-    /*
-    new webpack.optimize.CommonsChunkPlugin({
-       names: ['vendor','manifest'],
-       minChunks: function (module, count) {
-         // any required modules inside node_modules are extracted to vendor
-         return (
-           module.resource &&
-           /\.js$/.test(module.resource) &&
-           module.resource.indexOf(
-             path.join(__dirname, '../node_modules')
-           ) === 0
-         )
-       }
+    new OptimizeCSSPlugin({
+      cssProcessorOptions: {
+        safe: true
+      }
     }),
-     new webpack.optimize.CommonsChunkPlugin({
-     name: 'manifest',
-     chunks: ['vendor']
-     })
-     */
+    // split vendor js into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function (module, count) {
+        // any required modules inside node_modules are extracted to vendor
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    }),
+    // extract webpack runtime and module manifest to its own file in order to
+    // prevent vendor hash from being updated whenever app bundle is updated
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      chunks: ['vendor']
+    }),
+    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.build.assetsSubDirectory,
+        ignore: ['.*']
+      }
+    ])
   ]
-});
-
-let entries = ((globalPath)=>{
-
-  let entryNames = [],
-    entryName;
-
-  glob.sync(globalPath).forEach((entryPath)=>{
-    entryName = path.basename(entryPath, path.extname(entryPath));
-    entryNames.push(entryName);
-  });
-
-  return entryNames;
-
-})(globalPath);
-
-webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-  name:'vendor',
-  chunks: entries, //提取哪些模块共有的部分
-  minChunks: entries.length
-}));
-
-webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-  name: 'manifest',
-  chunks: ['vendor']
-}));
-
-webpackConfig.plugins.push(new CopyWebpackPlugin([
-  {
-    from: path.resolve(__dirname, '../static'),
-    to: config.build.assetsSubDirectory,
-    ignore: ['.*']
-  }
-]));
-
+})
 
 if (config.build.productionGzip) {
-  const CompressionWebpackPlugin = require('compression-webpack-plugin');
+  var CompressionWebpackPlugin = require('compression-webpack-plugin')
+
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
@@ -117,30 +96,33 @@ if (config.build.productionGzip) {
   )
 }
 
+if (config.build.bundleAnalyzerReport) {
+  var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
 let pages = ((globalPath)=>{
   let htmlFiles = {},
     pageName;
 
   glob.sync(globalPath).forEach((pagePath)=>{
-    let tmp='';
-    let basename = path.basename(pagePath, path.extname(pagePath));
-    if(pagePath.indexOf('pages')>-1){
-      tmp = pagePath.split('/').slice(-2,-1).join('')+'/'+basename;
-    }else{
-      tmp = 'index';
-    }
-    pageName = tmp;
+    var basename = path.basename(pagePath, path.extname(pagePath));
+    pageName = basename;
     htmlFiles[pageName] = {};
     htmlFiles[pageName]['chunk'] = basename;
     htmlFiles[pageName]['path'] = pagePath;
+
   });
   return htmlFiles;
-})(projectSrc+'/**/*.html');
+})(utils.resolve('src')+'/modules/**/*.html');
 
-for (let pagePath in pages) {
+for (let entryName in pages) {
   let conf = {
-    filename: pagePath + '.html',
-    template: pages[pagePath]['path'],
+    // 生成出来的html文件名
+    filename: entryName + '.html',
+    // 每个html的模版，这里多个页面使用同一个模版
+    template: pages[entryName]['path'],
+    // 自动将引用插入html
     inject: true,
     minify: {
       removeComments: true,
@@ -149,17 +131,11 @@ for (let pagePath in pages) {
       // more options:
       // https://github.com/kangax/html-minifier#options-quick-reference
     },
-    chunks: [pages[pagePath]['chunk'],'vendor','manifest'],
     // necessary to consistently work with multiple chunks via CommonsChunkPlugin
     chunksSortMode: 'dependency'
   };
+  /*入口文件对应html文件（配置多个，一个页面对应一个入口，通过chunks对应）*/
   webpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
 }
 
-if (config.build.bundleAnalyzerReport) {
-  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin());
-}
-
-
-module.exports =  webpackConfig;
+module.exports = webpackConfig;
