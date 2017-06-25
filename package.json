@@ -1,6 +1,6 @@
 {
   "name": "vue-multipage-cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Simple Multiple-page CLI for scaffolding Vue.js projects",
   "author": "xwpongithub <xwpjava@gmail.com>",
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "vue": "^2.3.3",
+    "vue": "^2.3.4",
     "vue-router": "^2.3.1"
   },
   "devDependencies": {
@@ -51,7 +51,7 @@
     "url-loader": "^0.5.8",
     "vue-loader": "^12.1.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.3.3",
+    "vue-template-compiler": "^2.3.4",
     "webpack": "^3.0.0",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",

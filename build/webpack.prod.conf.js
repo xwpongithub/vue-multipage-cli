@@ -34,7 +34,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       compress: {
         warnings: false
       },
-      sourceMap: true
+      sourceMap: config.build.productionSourceMap ? true : false
     }),
     // extract css into its own file
     new ExtractTextPlugin({
@@ -47,6 +47,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         safe: true
       }
     }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
